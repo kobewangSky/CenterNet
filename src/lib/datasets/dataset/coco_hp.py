@@ -29,16 +29,36 @@ class COCOHP(data.Dataset):
                   [12, 14], [14, 16], [11, 13], [13, 15]]
     
     self.acc_idxs = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
-    self.data_dir = os.path.join(opt.data_dir, 'coco')
-    self.img_dir = os.path.join(self.data_dir, '{}2017'.format(split))
-    if split == 'test':
-      self.annot_path = os.path.join(
-          self.data_dir, 'annotations', 
-          'image_info_test-dev2017.json').format(split)
-    else:
-      self.annot_path = os.path.join(
-        self.data_dir, 'annotations', 
-        'person_keypoints_{}2017.json').format(split)
+    # self.data_dir = os.path.join(opt.data_dir, 'coco')
+    # self.img_dir = os.path.join(self.data_dir, 'images','{}2017'.format(split))
+
+    # self.data_dir = os.path.join(opt.data_dir, 'real_v1')
+    # self.img_dir = os.path.join(self.data_dir, 'images')
+    #
+    # if split == 'test':
+    #   self.annot_path = os.path.join(
+    #       self.data_dir, 'annotations',
+    #       'image_info_test-dev2017.json').format(split)
+    # else:
+    #   # self.annot_path = os.path.join(
+    #   #   self.data_dir, 'annotations',
+    #   #   'person_keypoints_{}2017.json').format(split)
+    #   self.annot_path = os.path.join(
+    #   self.data_dir, 'annotations',
+    #   'output.json')
+    if split == 'train':
+      self.data_dir = os.path.join(opt.data_dir, 'real_v0')
+      self.img_dir = os.path.join(self.data_dir, 'images')
+    elif split == 'val':
+      self.data_dir = os.path.join(opt.data_dir, 'real_v1')
+      self.img_dir = os.path.join(self.data_dir, 'images')
+    elif split == 'test':
+      self.data_dir = os.path.join(opt.data_dir, 'real_v1')
+      self.img_dir = os.path.join(self.data_dir, 'images')
+
+    self.annot_path = os.path.join( self.data_dir, 'annotations', 'output.json')
+
+
     self.max_objs = 32
     self._data_rng = np.random.RandomState(123)
     self._eig_val = np.array([0.2141788, 0.01817699, 0.00341571],
