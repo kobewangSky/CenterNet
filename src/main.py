@@ -32,7 +32,7 @@ def main(opt):
   
   print('Creating model...')
   model = create_model(opt.arch, opt.heads, opt.head_conv)
-  optimizer = torch.optim.Adam(model.parameters(),lr = opt.lr)
+  optimizer = torch.optim.SGD(model.parameters(),lr = opt.lr, weight_decay=0.0005)
 
   start_epoch = 0
   if opt.load_model != '':
@@ -72,7 +72,6 @@ def main(opt):
 
   for epoch in range(start_epoch + 1, opt.num_epochs + 1):
     mark = epoch if opt.save_all else 'last'
-
 
     log_dict_train, _ = trainer.train(epoch, train_loader, losses)
 

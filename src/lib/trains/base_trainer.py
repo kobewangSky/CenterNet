@@ -46,6 +46,7 @@ class BaseTrainer(object):
     if phase == 'train':
       model_with_loss.train()
     else:
+      losses.clear()
       if len(self.opt.gpus) > 1:
         model_with_loss = self.model_with_loss.module
       model_with_loss.eval()
@@ -59,7 +60,7 @@ class BaseTrainer(object):
     bar = Bar('{}/{}'.format(opt.task, opt.exp_id), max=num_iters)
     end = time.time()
     for iter_id, batch in enumerate(data_loader):
-      print('index = {}'.format(iter_id))
+      #print('index = {}'.format(iter_id))
       if iter_id >= num_iters:
         break
       data_time.update(time.time() - end)
@@ -71,7 +72,7 @@ class BaseTrainer(object):
       loss = loss.mean()
       losses.append(loss)
       avg_loss = sum(losses) / len(losses)
-      print('phase = {}, losses = {}'.format(phase, avg_loss))
+      #print('phase = {}, losses = {}'.format(phase, avg_loss))
       if phase == 'train':
         self.optimizer.zero_grad()
         loss.backward()
