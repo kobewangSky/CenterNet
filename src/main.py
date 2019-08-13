@@ -16,6 +16,7 @@ from datasets.dataset_factory import get_dataset
 from trains.train_factory import train_factory
 from collections import deque
 from torch.optim.lr_scheduler import StepLR
+from test_pose import testvalue
 
 
 def main(opt):
@@ -32,7 +33,7 @@ def main(opt):
   
   print('Creating model...')
   model = create_model(opt.arch, opt.heads, opt.head_conv)
-  optimizer = torch.optim.SGD(model.parameters(),lr = opt.lr, weight_decay=0.0005)
+  optimizer = torch.optim.Adam(model.parameters(),lr = opt.lr)
 
   start_epoch = 0
   if opt.load_model != '':
@@ -86,14 +87,21 @@ def main(opt):
       save_model(os.path.join(opt.save_dir, 'model_{}.pth'.format(mark)), 
                  epoch, model, optimizer)
       with torch.no_grad():
-        log_dict_val, preds = trainer.val(epoch, val_loader, losses)
+            log_dict_val, preds = trainer.val(epoch, val_loader, losses)
+            #value = testvalue()
+            #print('=======================validationloss = {}  ==============================='.format(value))
       for k, v in log_dict_val.items():
         logger.scalar_summary('val_{}'.format(k), v, epoch)
         logger.write('{} {:8f} | '.format(k, v))
       if log_dict_val[opt.metric] < best:
         best = log_dict_val[opt.metric]
-        save_model(os.path.join(opt.save_dir, 'model_best.pth'), 
+        save_model(os.path.join(opt.save_dir, 'model_best.pth'),
                    epoch, model)
+
+      # if value < best:
+      #   best = value
+      #   save_model(os.path.join(opt.save_dir, 'model_best.pth'),
+      #              epoch, model)
     else:
       save_model(os.path.join(opt.save_dir, 'model_last.pth'), 
                  epoch, model, optimizer)
@@ -108,5 +116,5 @@ def main(opt):
   logger.close()
 
 if __name__ == '__main__':
-  opt = opts().init()
+  opt = opts().parse()
   main(opt)

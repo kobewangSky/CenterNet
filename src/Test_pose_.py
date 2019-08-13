@@ -21,8 +21,8 @@ parser.add_argument('--model_path', dest='model_path', default='../exp/multi_pos
 parser.add_argument('--threshold', dest='threshold', default=0.2, help='pck threshold')
 
 # parser.add_argument('--model_path', dest='model_path', default='../exp/multi_pose/hg_virtual/model_best.pth', help='load model pth')
-parser.add_argument('--data_path', dest='data_path', default='../data/real_v1/images', help='load data dir')
-parser.add_argument('--label_path', dest='label_path', default='../data/real_v1/annotations/output.json', help='load data dir')
+parser.add_argument('--data_path', dest='data_path', default='../data/real_v2/images/', help='load data dir')
+parser.add_argument('--label_path', dest='label_path', default='../data/real_v2/annotations/output.json', help='load data dir')
 
 
 parser.add_argument('--visualize', dest='visualize', default=False, help='load data dir')
@@ -46,7 +46,9 @@ for anno in labels['annotations']:
 
 img_list = labels['images']
 dist_keypoints = []
+index = 0
 for img in img_list:
+    index = index + 1
     img_id = img['id']
     img_path = os.path.join(args.data_path, img['file_name'])
     print(img_path)
@@ -110,8 +112,7 @@ for img in img_list:
             del pred_bboxs[target_id]
     # visualize
     if args.visualize:
-        cv2.imshow('img', ori_img)
-        cv2.waitKey(1000)
+        cv2.imwrite('../output/v1/{}.jpg'.format(index), ori_img)
     # False Positive
     for _ in range(len(pred_bboxs)):
         d = np.ones(17) * np.inf
