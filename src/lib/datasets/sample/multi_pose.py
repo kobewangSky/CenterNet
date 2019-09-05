@@ -110,6 +110,25 @@ class MultiPoseDataset(data.Dataset):
       if len(ann['keypoints']) != 51:
         continue
       pts = np.array(ann['keypoints'], np.float32).reshape(num_joints, 3)
+
+      #head other point apply nose point
+      pts[1:5, 0] = pts[0, 0]
+      pts[1:5, 1] = pts[0, 1]
+
+
+      # cv2.circle(img, (int(float(pts[5, 0])), int(float(pts[5, 1]))), 30, (0, 255, 0), -1)
+      #
+      # cv2.circle(img, (int(float(pts[7, 0])), int(float(pts[7, 0]))), 30, (0, 255, 0), -1)
+      # cv2.circle(img, (int(float(pts[9, 0])), int(float(pts[9, 0]))), 30,
+      #            (0, 255, 0), -1)
+      # cv2.circle(img, (int(float(pts[11, 0])), int(float(pts[11, 0]))), 30,
+      #            (0, 255, 0), -1)
+      # cv2.circle(img, (int(float(pts[13, 0])), int(float(pts[13, 0]))), 30,
+      #            (0, 255, 0), -1)
+      # cv2.circle(img, (int(float(pts[15, 0])), int(float(pts[15, 0]))), 30,
+      #            (0, 255, 0), -1)
+      # cv2.imwrite('./{}.png'.format(img_id), img)
+
       if flipped:
         bbox[[0, 2]] = width - bbox[[2, 0]] - 1
         pts[:, 0] = width - pts[:, 0] - 1

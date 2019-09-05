@@ -46,15 +46,15 @@ class COCOHP(data.Dataset):
     if split == 'train':
       self.data_dir = opt.data_dir
       self.img_dir = self.data_dir
-      self.annot_path = os.path.join(self.data_dir, 'TestExporter2_TestExporter3_TestExporter4_TestExporter5_TestExporter6_TestExporter7_TestExporter8_TestExporter9_TestExporter10_TestExporter11_real_v0_TestExporter12_TestExporter13_TestExporter14_output.json')
+      self.annot_path = os.path.join(self.data_dir, opt.Train_file_path)
     elif split == 'val':
-      self.data_dir = os.path.join(opt.data_dir, 'real_v2')
+      self.data_dir = os.path.join(opt.data_dir, 'human_label_kobeF2')
       self.img_dir = os.path.join(self.data_dir, 'images')
-      self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
+      self.annot_path = os.path.join(self.data_dir, 'annotations', 'keypoint_output.json')
     elif split == 'test':
-      self.data_dir = os.path.join(opt.data_dir, 'real_v2')
+      self.data_dir = os.path.join(opt.data_dir, 'human_label_kobeF2')
       self.img_dir = os.path.join(self.data_dir, 'images')
-      self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
+      self.annot_path = os.path.join(self.data_dir, 'annotations', 'keypoint_output.json')
 
 
 

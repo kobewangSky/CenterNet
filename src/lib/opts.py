@@ -78,6 +78,9 @@ class opts(object):
                              help='input height. -1 for default from dataset.')
     self.parser.add_argument('--input_w', type=int, default=-1, 
                              help='input width. -1 for default from dataset.')
+
+    self.parser.add_argument('--Train_file_path', type=str, default='',
+                             help='set training coco .json')
     
     # train
     self.parser.add_argument('--lr', type=float, default=1.25e-4, 

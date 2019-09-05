@@ -12,17 +12,18 @@ import json
 import numpy as np
 from scipy.spatial import distance
 
+model_load_path = 'hg_kinect_3x'
 
 parser = argparse.ArgumentParser()
-parser.add_argument('--model_path', dest='model_path', default='../exp/multi_pose/multi_pose/model_best.pth', help='load model pth')
+parser.add_argument('--model_path', dest='model_path', default='../exp/multi_pose/{}//model_best.pth'.format(model_load_path), help='load model pth')
 # parser.add_argument('--model_path', dest='model_path', default='../models/multi_pose_hg_3x.pth', help='load model pth')
 # parser.add_argument('--data_path', dest='data_path', default='/media/ssd_external/2018-12-05-subset/images', help='load data dir')
 # parser.add_argument('--label_path', dest='label_path', default='/media/ssd_external/2018-12-05-subset/annotations/output.json', help='load data dir')
 parser.add_argument('--threshold', dest='threshold', default=0.2, help='pck threshold')
 
 # parser.add_argument('--model_path', dest='model_path', default='../exp/multi_pose/hg_virtual/model_best.pth', help='load model pth')
-parser.add_argument('--data_path', dest='data_path', default='../data/real_v2/images/', help='load data dir')
-parser.add_argument('--label_path', dest='label_path', default='../data/real_v2/annotations/output.json', help='load data dir')
+parser.add_argument('--data_path', dest='data_path', default='../data/human_label_kobeF2/images/', help='load data dir')
+parser.add_argument('--label_path', dest='label_path', default='../data/human_label_kobeF2/annotations/keypoint_output.json', help='load data dir')
 
 
 parser.add_argument('--visualize', dest='visualize', default=False, help='load data dir')
@@ -37,6 +38,13 @@ labels = json.load(open(args.label_path))
 gts = {}
 for anno in labels['annotations']:
     img_id = anno['image_id']
+
+    #for merge eye ear to nose
+    for it in range(1, 5, 1):
+        anno['keypoints'][it * 3 ] = anno['keypoints'][0]
+        anno['keypoints'][it * 3 +1] = anno['keypoints'][1]
+
+
     if img_id in list(gts.keys()):
         gts[img_id].append({'bbox': anno['bbox'],
                             'keypoints': anno['keypoints']})
@@ -85,7 +93,7 @@ for img in img_list:
             break
         if args.visualize:
             for i in range(17):
-                ori_img = cv2.circle(ori_img, (int(gt_keypoint[i][0]), int(gt_keypoint[i][1])), 2, (0, 255, 0), 2)
+                ori_img = cv2.circle(ori_img, (int(float(gt_keypoint[i][0])), int(float(gt_keypoint[i][1]))), 2, (0, 255, 0), 2)
         np_gt_keypoint = np.array(gt_keypoint)
         np_pred_bboxs = np.array(pred_bboxs)
         np_gt_bbox = np.array(gt_bbox)
@@ -112,7 +120,13 @@ for img in img_list:
             del pred_bboxs[target_id]
     # visualize
     if args.visualize:
-        cv2.imwrite('../output/v1/{}.jpg'.format(index), ori_img)
+        file_out_path = os.path.join('../output/', model_load_path)
+        if not os.path.exists('../output/'):
+            os.mkdir('../output/')
+        if not os.path.exists(file_out_path):
+            os.mkdir(file_out_path)
+
+        cv2.imwrite(file_out_path + '/{}.jpg'.format(index), ori_img)
     # False Positive
     for _ in range(len(pred_bboxs)):
         d = np.ones(17) * np.inf

@@ -20,6 +20,7 @@ from test_pose import testvalue
 
 
 def main(opt):
+
   torch.manual_seed(opt.seed)
   torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
   Dataset = get_dataset(opt.dataset, opt.task)
@@ -69,16 +70,12 @@ def main(opt):
 
   print('Starting training...')
   best = 1e10
-  losses = deque(maxlen=1000)
 
   for epoch in range(start_epoch + 1, opt.num_epochs + 1):
     mark = epoch if opt.save_all else 'last'
 
-    log_dict_train, _ = trainer.train(epoch, train_loader, losses)
+    log_dict_train, _ = trainer.train(epoch, train_loader)
 
-    avg_loss = sum(losses) / len(losses)
-
-    print('loss: {}, loss: {} |'.format(epoch, avg_loss))
     logger.write('epoch: {} |'.format(epoch))
     for k, v in log_dict_train.items():
       logger.scalar_summary('train_{}'.format(k), v, epoch)
@@ -87,7 +84,7 @@ def main(opt):
       save_model(os.path.join(opt.save_dir, 'model_{}.pth'.format(mark)), 
                  epoch, model, optimizer)
       with torch.no_grad():
-            log_dict_val, preds = trainer.val(epoch, val_loader, losses)
+            log_dict_val, preds = trainer.val(epoch, val_loader)
             #value = testvalue()
             #print('=======================validationloss = {}  ==============================='.format(value))
       for k, v in log_dict_val.items():

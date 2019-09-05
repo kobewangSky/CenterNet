@@ -1,9 +1,8 @@
 import os
 import json
 
-target_dirs = [ 'TestExporter2', 'TestExporter3', 'TestExporter4', 'TestExporter5', 'TestExporter6', 'TestExporter7', 'TestExporter8', 'TestExporter9', 'TestExporter10', 'TestExporter11'
-    , 'TestExporter12', 'TestExporter13', 'TestExporter14', 'real_v0']
-target_file = '../output/'
+target_dirs = [ 'kinect_label_kobeF2', 'home_1', 'home_2', 'home_3', 'real_v2']
+target_file = './data/'
 for target_dir in target_dirs:
     target_file += target_dir + '_'
 target_file += 'output.json'
@@ -12,7 +11,7 @@ output_images = {}
 output_annotations = {}
 
 for idx, target_dir in enumerate(target_dirs):
-    target_json = os.path.join('../output/', target_dir, 'annotations', 'output.json')
+    target_json = os.path.join('./data', target_dir, 'annotations', 'output.json')
     labels = json.load(open(target_json))
     if idx == 0:
         output_images = labels['images']
