@@ -17,13 +17,16 @@ from trains.train_factory import train_factory
 from collections import deque
 from torch.optim.lr_scheduler import StepLR
 from test_pose import testvalue
-
+import math
 
 def main(opt):
 
   torch.manual_seed(opt.seed)
   torch.backends.cudnn.benchmark = not opt.not_cuda_benchmark and not opt.test
+
+
   Dataset = get_dataset(opt.dataset, opt.task)
+
   opt = opts().update_dataset_info_and_set_heads(opt, Dataset)
   print(opt)
 
@@ -115,3 +118,4 @@ def main(opt):
 if __name__ == '__main__':
   opt = opts().parse()
   main(opt)
+

@@ -38,6 +38,13 @@ class MultiPoseDataset(data.Dataset):
     img = cv2.imread(img_path)
 
     height, width = img.shape[0], img.shape[1]
+
+    if self.opt.grayscale == True:
+      img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+      img = img.repeat(3).reshape(height, width, 3)
+
+
+
     c = np.array([img.shape[1] / 2., img.shape[0] / 2.], dtype=np.float32)
     s = max(img.shape[0], img.shape[1]) * 1.0
     rot = 0

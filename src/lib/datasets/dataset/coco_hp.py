@@ -22,6 +22,9 @@ class COCOHP(data.Dataset):
               [11, 12], [13, 14], [15, 16]]
   def __init__(self, opt, split):
     super(COCOHP, self).__init__()
+    if opt.grayscale == True:
+      self.mean = opt.mean
+      self.std = opt.std
     self.edges = [[0, 1], [0, 2], [1, 3], [2, 4], 
                   [4, 6], [3, 5], [5, 6], 
                   [5, 7], [7, 9], [6, 8], [8, 10], 

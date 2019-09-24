@@ -5,6 +5,7 @@ from __future__ import print_function
 import argparse
 import os
 import sys
+import math
 
 class opts(object):
   def __init__(self):
@@ -227,6 +228,9 @@ class opts(object):
     self.parser.add_argument('--eval_oracle_dep', action='store_true', 
                              help='use ground truth depth.')
 
+    self.parser.add_argument('--grayscale', action='store_true',
+                             help='use grayscale.')
+
   def parse(self, args=''):
     if args == '':
       opt = self.parser.parse_args()
@@ -287,6 +291,9 @@ class opts(object):
   def update_dataset_info_and_set_heads(self, opt, dataset):
     input_h, input_w = dataset.default_resolution
     opt.mean, opt.std = dataset.mean, dataset.std
+    if opt.grayscale == True:
+        opt.mean = (opt.mean[0][0][0] * 0.114 + opt.mean[0][0][1] * 0.587 + opt.mean[0][0][2] * 0.299)
+        opt.std = math.sqrt( ((opt.std[0][0][0] ** 2) * 0.114) + ((opt.std[0][0][1] ** 2) * 0.587) + ((opt.std[0][0][2] ** 2) * 0.299))
     opt.num_classes = dataset.num_classes
 
     # input_h(w): opt.input_h overrides opt.input_res overrides dataset default
