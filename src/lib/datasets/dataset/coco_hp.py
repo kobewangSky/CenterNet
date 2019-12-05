@@ -51,14 +51,17 @@ class COCOHP(data.Dataset):
       self.img_dir = self.data_dir
       self.annot_path = os.path.join(self.data_dir, opt.Train_file_path)
     elif split == 'val':
-      self.data_dir = os.path.join(opt.data_dir, 'human_label_kobeF2')
-      self.img_dir = os.path.join(self.data_dir, 'images')
-      self.annot_path = os.path.join(self.data_dir, 'annotations', 'keypoint_output.json')
+      self.data_dir = os.path.join(opt.data_dir, 'victor_v3')
+      self.img_dir = os.path.join(self.data_dir, 'images_privacy')
+      self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
     elif split == 'test':
-      self.data_dir = os.path.join(opt.data_dir, 'human_label_kobeF2')
-      self.img_dir = os.path.join(self.data_dir, 'images')
-      self.annot_path = os.path.join(self.data_dir, 'annotations', 'keypoint_output.json')
-
+      self.data_dir = os.path.join(opt.data_dir, 'victor_v3')
+      self.img_dir = os.path.join(self.data_dir, 'images_privacy')
+      self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
+    elif split == 'virtual':
+      self.data_dir = os.path.join(opt.data_dir, 'Virtual_V4')
+      self.img_dir = os.path.join(self.data_dir, 'images_privacy')
+      self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
 
 
 

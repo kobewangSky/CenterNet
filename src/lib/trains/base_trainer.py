@@ -41,7 +41,7 @@ class BaseTrainer(object):
         if isinstance(v, torch.Tensor):
           state[k] = v.to(device=device, non_blocking=True)
 
-  def run_epoch(self, phase, epoch, data_loader):
+  def run_epoch(self, phase, epoch, data_loader, externaldata = None):
     model_with_loss = self.model_with_loss
     if phase == 'train':
       model_with_loss.train()
@@ -58,7 +58,13 @@ class BaseTrainer(object):
     num_iters = len(data_loader) if opt.num_iters < 0 else opt.num_iters
     bar = Bar('{}/{}'.format(opt.task, opt.exp_id), max=num_iters)
     end = time.time()
+    get_exdataindex = 0
     for iter_id, batch in enumerate(data_loader):
+      if externaldata != None and get_exdataindex >= 2:
+        batch = next(iter(externaldata))
+        get_exdataindex = 0
+
+
       #print('index = {}'.format(iter_id))
       if iter_id >= num_iters:
         break
@@ -100,6 +106,8 @@ class BaseTrainer(object):
       if opt.test:
         self.save_result(output, batch, results)
       del output, loss, loss_stats
+
+      get_exdataindex = get_exdataindex + 1
     
     bar.finish()
     ret = {k: v.avg for k, v in avg_loss_stats.items()}
@@ -118,5 +126,5 @@ class BaseTrainer(object):
   def val(self, epoch, data_loader):
     return self.run_epoch('val', epoch, data_loader)
 
-  def train(self, epoch, data_loader):
-    return self.run_epoch('train', epoch, data_loader)
+  def train(self, epoch, data_loader, virtual_loader = None):
+    return self.run_epoch('train', epoch, data_loader, virtual_loader)

@@ -20,21 +20,45 @@ class COCO(data.Dataset):
 
   def __init__(self, opt, split):
     super(COCO, self).__init__()
+
+
     self.data_dir = os.path.join(opt.data_dir, 'coco')
     self.img_dir = os.path.join(self.data_dir, 'images','{}2017'.format(split))
     if split == 'test':
       self.annot_path = os.path.join(
-          self.data_dir, 'annotations', 
+          self.data_dir, 'annotations',
           'image_info_test-dev2017.json').format(split)
     else:
       if opt.task == 'exdet':
         self.annot_path = os.path.join(
-          self.data_dir, 'annotations', 
+          self.data_dir, 'annotations',
           'instances_extreme_{}2017.json').format(split)
       else:
         self.annot_path = os.path.join(
-          self.data_dir, 'annotations', 
+          self.data_dir, 'annotations',
           'instances_{}2017.json').format(split)
+
+    # if split == 'train':
+    #   self.data_dir = opt.data_dir
+    #   self.img_dir = self.data_dir
+    #   self.annot_path = os.path.join(self.data_dir, opt.Train_file_path)
+    # elif split == 'val':
+    #   self.data_dir = os.path.join(opt.data_dir, 'demo_data')
+    #   self.img_dir = os.path.join(self.data_dir, 'images')
+    #   self.annot_path = os.path.join(self.data_dir, 'annotations', 'finial_keypoint.json')
+    # elif split == 'test':
+    #   self.data_dir = os.path.join(opt.data_dir, 'demo_data')
+    #   self.img_dir = os.path.join(self.data_dir, 'images')
+    #   self.annot_path = os.path.join(self.data_dir, 'annotations', 'finial_keypoint.json')
+    # elif split == 'virtual':
+    #   self.data_dir = os.path.join(opt.data_dir, 'Virtual_V4')
+    #   self.img_dir = os.path.join(self.data_dir, 'images')
+    #   self.annot_path = os.path.join(self.data_dir, 'annotations', 'output.json')
+
+
+
+
+
     self.max_objs = 128
     self.class_name = [
       '__background__', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
@@ -59,6 +83,8 @@ class COCO(data.Dataset):
       58, 59, 60, 61, 62, 63, 64, 65, 67, 70, 
       72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 
       82, 84, 85, 86, 87, 88, 89, 90]
+
+
     self.cat_ids = {v: i for i, v in enumerate(self._valid_ids)}
     self.voc_color = [(v // 32 * 64 + 64, (v // 8) % 4 * 64, v % 8 * 32) \
                       for v in range(1, self.num_classes + 1)]
@@ -80,6 +106,18 @@ class COCO(data.Dataset):
     self.coco = coco.COCO(self.annot_path)
     self.images = self.coco.getImgIds()
     self.num_samples = len(self.images)
+
+
+    # image_ids = self.coco.getImgIds()
+    # self.images = []
+    # for img_id in image_ids:
+    #   idxs = self.coco.getAnnIds(imgIds=[img_id])
+    #   if len(idxs) > 0:
+    #     self.images.append(img_id)
+    #self.num_samples = len(self.images)
+
+
+
 
     print('Loaded {} {} samples'.format(split, self.num_samples))
 
@@ -114,9 +152,9 @@ class COCO(data.Dataset):
     return self.num_samples
 
   def save_results(self, results, save_dir):
-    json.dump(self.convert_eval_format(results), 
+    json.dump(self.convert_eval_format(results),
                 open('{}/results.json'.format(save_dir), 'w'))
-  
+
   def run_eval(self, results, save_dir):
     # result_json = os.path.join(save_dir, "results.json")
     # detections  = self.convert_eval_format(results)

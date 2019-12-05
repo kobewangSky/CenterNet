@@ -71,6 +71,15 @@ def main(opt):
       drop_last=True
   )
 
+  # virtual_loader = torch.utils.data.DataLoader(
+  #     Dataset(opt, 'virtual'),
+  #     batch_size=opt.batch_size,
+  #     shuffle=True,
+  #     num_workers=opt.num_workers,
+  #     pin_memory=True,
+  #     drop_last=True
+  # )
+
   print('Starting training...')
   best = 1e10
 
